@@ -1,4 +1,4 @@
-package com.qa.app.domain;
+package com.qa.app.persistence.domain;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
