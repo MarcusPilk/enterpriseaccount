@@ -1,11 +1,7 @@
-package com.qa.app.persistence.repositories;
-
-import com.qa.app.persistence.domain.Account;
-
-import java.util.List;
+package com.qa.app.service.business;
 
 public interface AccountRepository {
-    List<Account> getAllAccounts();
+    String getAllAccounts();
 
     String createAccount(String account);
 

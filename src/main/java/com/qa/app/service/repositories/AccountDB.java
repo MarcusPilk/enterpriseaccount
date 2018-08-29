@@ -1,39 +1,43 @@
-package com.qa.app.persistence.repositories;
+package com.qa.app.service.repositories;
 
 import com.google.gson.Gson;
-import com.qa.app.persistence.domain.Account;
+import com.qa.app.domain.Account;
+import com.qa.app.service.business.AccountRepository;
 
+import javax.enterprise.inject.Default;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
 
-import java.util.List;
-
 import static javax.transaction.Transactional.TxType.REQUIRED;
 import static javax.transaction.Transactional.TxType.SUPPORTS;
 
 @Transactional(SUPPORTS)
-public class AccountDB implements AccountRepository{
+@Default
+public class AccountDB implements AccountRepository {
 
     @PersistenceContext(unitName = "primary")
     private EntityManager manager;
 
-    @Inject
     private Gson gson;
 
+    public AccountDB() {
+        gson = new Gson();
+    }
+
     @Override
-    public List<Account> getAllAccounts() {
+    public String getAllAccounts() {
         Query query = manager.createQuery("SELECT a FROM Account a",Account.class);
-        return query.getResultList();
+        return gson.toJson(query.getResultList());
     }
 
     @Override @Transactional(REQUIRED)
     public String createAccount(String account){
         Account aAccount = gson.fromJson(account,Account.class);
         manager.persist(aAccount);
-        return "Account created successfully";
+        return "{\"message\": \"Account is created\"}";
     }
 
     @Override @Transactional(REQUIRED)
@@ -44,14 +48,14 @@ public class AccountDB implements AccountRepository{
             accountFromDB = updatedAccount;
             manager.merge(accountFromDB);
         }
-        return "Account updated successfully";
+        return "{\"message\": \"Account is updated\"}";
     }
 
     @Override     @Transactional(REQUIRED)
     public String deleteAccount(int id) {
         Account aAccount = manager.find(Account.class,id);
         manager.remove(aAccount);
-        return "Account deleted successfully";
+        return "{\"message\": \"Account is removed\"}";
     }
 
 
