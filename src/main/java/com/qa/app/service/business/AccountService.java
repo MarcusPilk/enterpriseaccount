@@ -18,8 +18,8 @@ public class AccountService {
 
     public String checkNewUser(String accountToBeCreated){
         Account newAccount = gson.fromJson(accountToBeCreated,Account.class);
-        if (newAccount.getId() == 9999){
-            return "You are blocked from creating a user with this ID";
+        if (newAccount.getAccountNumber() == 9999){
+            return "You are blocked from creating a user with this Account Number";
         }else{
             accountRepo.createAccount(accountToBeCreated);
             return "";
